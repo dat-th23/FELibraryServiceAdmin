@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getCategorys } from "src/utils/axios";
+import { getCategories } from "src/utils/axios";
 import { FetchCategory } from "src/utils/types"
 
 
@@ -12,9 +12,9 @@ const initialState: CategorysState = {
 }
 
 export const fetchCategoriesThunk = createAsyncThunk(
-    'categories/fectch',
+    'categories/fetch',
     async () => {
-        return getCategorys();
+        return getCategories();
     }
 )
 

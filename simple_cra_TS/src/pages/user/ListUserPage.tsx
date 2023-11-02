@@ -1,9 +1,17 @@
-
-import React, { useEffect, useMemo, useState,useCallback } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { IUserAccountGeneral } from 'src/@types/user';
 import { useSettingsContext } from 'src/components/settings';
-import { emptyRows, getComparator, TableEmptyRows, TableHeadCustom, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from 'src/components/table';
+import {
+  emptyRows,
+  getComparator,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableNoData,
+  TablePaginationCustom,
+  TableSelectedAction,
+  useTable,
+} from 'src/components/table';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -27,35 +35,36 @@ import {
 } from '@mui/material';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { UserTableRow, UserTableToolbar } from 'src/sections/@dashboard/user/list';
-import { RootState, useDispatch,useSelector } from 'src/redux/store';
+import { RootState, useDispatch, useSelector } from 'src/redux/store';
 import { useAuthContext } from 'src/auth/useAuthContext';
 import { Role, User } from 'src/utils/types';
 import { AddToRoleDialog } from 'src/components/dialog';
 import LoadMoneyDialog from 'src/components/dialog/LoadMoneyDialog';
-import {listUsers} from 'src/utils/axios'
+import { listUsers } from 'src/utils/axios';
 import { fetchUserThunk, getAllUser } from 'src/redux/slices/user';
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
 const ROLE_OPTIONS = [
-{
-  id:  0,
-  name: 'all'
-},
-{
-  id:  1,
-  name: 'USER'
-},
-{
-  id:2,
-  name:'MEMBER'
-},{
-  id: 3,
-  name: 'LIBRARIAN',
-
-},{
-  id: 4 ,
-  name:'ADMIN'
-}
+  {
+    id: 0,
+    name: 'all',
+  },
+  {
+    id: 1,
+    name: 'USER',
+  },
+  {
+    id: 2,
+    name: 'MEMBER',
+  },
+  {
+    id: 3,
+    name: 'LIBRARIAN',
+  },
+  {
+    id: 4,
+    name: 'ADMIN',
+  },
 ];
 
 const TABLE_HEAD = [
@@ -68,7 +77,7 @@ const TABLE_HEAD = [
 ];
 export default function ListUserPage() {
   const dispatch = useDispatch();
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
   const {
     dense,
     page,
@@ -89,9 +98,9 @@ export default function ListUserPage() {
   } = useTable();
 
   const { themeStretch } = useSettingsContext();
-  const [open,setOpen] = useState(false);// open form add role
-  const [openMoney,setOpenMoney] = useState(false);// open form load money
-  const [userUpdateMoney,setUserUpdateMoney] = useState<User>()
+  const [open, setOpen] = useState(false); // open form add role
+  const [openMoney, setOpenMoney] = useState(false); // open form load money
+  const [userUpdateMoney, setUserUpdateMoney] = useState<User>();
 
   const navigate = useNavigate();
 
@@ -101,33 +110,32 @@ export default function ListUserPage() {
 
   const [filterRole, setFilterRole] = useState<Role>({
     id: 0,
-    name: "all"
+    name: 'all',
   });
 
-  const [userIdRole ,setUserIdRole] = useState<string>("");
+  const [userIdRole, setUserIdRole] = useState<string>('');
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [filterStatus, setFilterStatus] = useState('all');
 
-  useCallback(()=>{
-    async function fetchData(){
+  useCallback(() => {
+    async function fetchData() {
       try {
         const res = await listUsers();
-        setTableData(res.data)
+        setTableData(res.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
-    fetchData()
-  },[tableData])
-
+    fetchData();
+  }, [tableData]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterRole,
-    filterName
+    filterName,
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -161,7 +169,7 @@ export default function ListUserPage() {
 
   const handleFilterRole = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPage(0);
-    setFilterRole({id: parseInt(event.target.value),name: "" });
+    setFilterRole({ id: parseInt(event.target.value), name: '' });
   };
 
   const handleDeleteRow = (id: number) => {
@@ -197,204 +205,195 @@ export default function ListUserPage() {
     //navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
   };
 
-  const  handleViewRow = (email: string)=>{
+  const handleViewRow = (email: string) => {
     navigate(PATH_DASHBOARD.user.account(email));
-  }
+  };
 
-  
-  const handleShowFormAddRole = (email: string)=>{
+  const handleShowFormAddRole = (email: string) => {
     setUserIdRole(email);
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
-  const handleCloseFormAddRole = ()=>{
-    
-    setOpen(false)
-  }
+  const handleCloseFormAddRole = () => {
+    setOpen(false);
+  };
 
-  const handleShowFormLoadMoney = (data: User)=>{
-    setUserUpdateMoney(data)
+  const handleShowFormLoadMoney = (data: User) => {
+    setUserUpdateMoney(data);
     setOpenMoney(true);
-  }
-  const handleCloseFormLoadMoney = ()=>{
+  };
+  const handleCloseFormLoadMoney = () => {
     setOpenMoney(false);
-  }
+  };
 
   const handleResetFilter = () => {
     setFilterName('');
-    setFilterRole({id: 0,name:'all'});
+    setFilterRole({ id: 0, name: 'all' });
     setFilterStatus('all');
   };
 
-  const handleReload = ()=>{
+  const handleReload = () => {
     window.location.reload();
-  }
+  };
 
   return (
     <>
-    <Helmet>
-      <title> User: List | Minimal UI</title>
-    </Helmet>
+      <Helmet>
+        <title> User: List | Minimal UI</title>
+      </Helmet>
 
-    <Container maxWidth={themeStretch ? false : 'lg'}>
-      <CustomBreadcrumbs
-        heading="User List"
-        links={[
-          { name: 'Dashboard', href: PATH_DASHBOARD.root },
-          { name: 'User', href: PATH_DASHBOARD.user.root },
-          { name: 'List' },
-        ]}
-        action={
-          <Grid container spacing={3}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs
+          heading="User List"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'List' },
+          ]}
+          action={
+            <Grid container spacing={3}>
+              <Button style={{ marginRight: '10px' }} variant="contained" onClick={handleReload}>
+                Reload
+              </Button>
               <Button
-                style={{"marginRight": "10px" }}
-                variant="contained"
-                onClick={handleReload}
-                >
-                  Reload
-            </Button>
-            <Button
                 to={PATH_DASHBOARD.user.newAccount}
                 component={RouterLink}
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
-                >
-              New User
-            </Button>
-          </Grid>
+              >
+                New User
+              </Button>
+            </Grid>
+          }
+        />
+
+        <Card>
+          <Divider />
+
+          <UserTableToolbar
+            isFiltered={isFiltered}
+            filterName={filterName}
+            filterRole={filterRole}
+            optionsRole={ROLE_OPTIONS}
+            onFilterName={handleFilterName}
+            onFilterRole={handleFilterRole}
+            onResetFilter={handleResetFilter}
+          />
+
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <TableSelectedAction
+              dense={dense}
+              numSelected={selected.length}
+              rowCount={tableData.length}
+              onSelectAllRows={(checked) =>
+                onSelectAllRows(
+                  checked,
+                  tableData.map((row) => row.email)
+                )
+              }
+              action={
+                <Tooltip title="Delete">
+                  <IconButton color="primary" onClick={handleOpenConfirm}>
+                    <Iconify icon="eva:trash-2-outline" />
+                  </IconButton>
+                </Tooltip>
+              }
+            />
+
+            <Scrollbar>
+              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={tableData.length}
+                  numSelected={selected.length}
+                  onSort={onSort}
+                  onSelectAllRows={(checked) =>
+                    onSelectAllRows(
+                      checked,
+                      tableData.map((row) => row.email)
+                    )
+                  }
+                />
+
+                <TableBody>
+                  {dataFiltered
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <UserTableRow
+                        key={row.id}
+                        row={row}
+                        selected={selected.includes(row.email)}
+                        onSelectRow={() => onSelectRow(row.email)}
+                        onDeleteRow={() => handleDeleteRow(row.id)}
+                        onEditRow={() => handleEditRow(row.id)}
+                        onViewDetail={() => handleViewRow(row.email)}
+                        onShowFormAddRole={() => handleShowFormAddRole(row.email)}
+                        handleShowFormLoadMoney={() => handleShowFormLoadMoney(row)}
+                      />
+                    ))}
+
+                  <TableEmptyRows
+                    height={denseHeight}
+                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                  />
+
+                  <TableNoData isNotFound={isNotFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+
+          <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            //
+            dense={dense}
+            onChangeDense={onChangeDense}
+          />
+        </Card>
+      </Container>
+
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete <strong> {selected.length} </strong> items?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRows(selected);
+              handleCloseConfirm();
+            }}
+          >
+            Delete
+          </Button>
         }
       />
 
-      <Card>
-        <Divider />
-
-        <UserTableToolbar
-          isFiltered={isFiltered}
-          filterName={filterName}
-          filterRole={filterRole}
-          optionsRole={ROLE_OPTIONS}
-          onFilterName={handleFilterName}
-          onFilterRole={handleFilterRole}
-          onResetFilter={handleResetFilter}
-        />
-
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            dense={dense}
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row.email)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
-          <Scrollbar>
-            <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-              <TableHeadCustom
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={tableData.length}
-                numSelected={selected.length}
-                onSort={onSort}
-                onSelectAllRows={(checked) =>
-                  onSelectAllRows(
-                    checked,
-                    tableData.map((row) => row.email)
-                  )
-                }
-              />
-
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      row={row}
-                      selected={selected.includes(row.email)}
-                      onSelectRow={() => onSelectRow(row.email)}
-                      onDeleteRow={() => handleDeleteRow(row.id)}
-                      onEditRow={() => handleEditRow(row.id)}
-                      onViewDetail={() => handleViewRow(row.email)}
-                      onShowFormAddRole={() => handleShowFormAddRole(row.email)}
-                      handleShowFormLoadMoney={() => handleShowFormLoadMoney(row)}
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  height={denseHeight}
-                  emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                />
-
-                <TableNoData isNotFound={isNotFound} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-
-        <TablePaginationCustom
-          count={dataFiltered.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-          //
-          dense={dense}
-          onChangeDense={onChangeDense}
-        />
-      </Card>
-    </Container>
-
-    <ConfirmDialog
-      open={openConfirm}
-      onClose={handleCloseConfirm}
-      title="Delete"
-      content={
-        <>
-          Are you sure want to delete <strong> {selected.length} </strong> items?
-        </>
-      }
-      action={
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => {
-            handleDeleteRows(selected);
-            handleCloseConfirm();
-          }}
-        >
-          Delete
-        </Button>
-      }
-    />
-
-    <AddToRoleDialog 
-      open={open} 
-      onClose={handleCloseFormAddRole} 
-      onSaveRole={handleCloseFormAddRole}
-      email={userIdRole}
-    />
-    <LoadMoneyDialog 
-      open={openMoney} 
-      onClose={handleCloseFormLoadMoney} 
-      onSaveRole={handleCloseFormLoadMoney}
-      user={userUpdateMoney}
-    />
-
-
-  </>
-  )
+      <AddToRoleDialog
+        open={open}
+        onClose={handleCloseFormAddRole}
+        onSaveRole={handleCloseFormAddRole}
+        email={userIdRole}
+      />
+      <LoadMoneyDialog
+        open={openMoney}
+        onClose={handleCloseFormLoadMoney}
+        onSaveRole={handleCloseFormLoadMoney}
+        user={userUpdateMoney}
+      />
+    </>
+  );
 }
 
 function applyFilter({
@@ -405,8 +404,8 @@ function applyFilter({
 }: {
   inputData: User[];
   comparator: (a: any, b: any) => number;
-  filterRole: Role,
-  filterName: string
+  filterRole: Role;
+  filterName: string;
 }) {
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
@@ -417,11 +416,8 @@ function applyFilter({
   }
 
   if (filterRole.id !== 0) {
-    inputData = inputData.filter((user) => user.roles.find((role) =>role.id === filterRole.id));
+    inputData = inputData.filter((user) => user.roles.find((role) => role.id === filterRole.id));
   }
-
-  
- 
 
   return inputData;
 }

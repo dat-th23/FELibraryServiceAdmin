@@ -23,7 +23,7 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 import { ListCategoryRow } from 'src/sections/@dashboard/category';
-import { createCategory, getCategorys, updateCategorys } from 'src/utils/axios';
+import { createCategory, getCategories, updateCategory } from 'src/utils/axios';
 import { Category, FetchCategory } from 'src/utils/types';
 const TABLE_HEAD = [
   { id: 'invoiceNumber', label: 'Client', align: 'left' },
@@ -56,7 +56,7 @@ export default function CategoryPage() {
   useEffect(()=>{
     const fetchData = async()=>{
       try {
-        const res = await getCategorys();
+        const res = await getCategories();
         setTableData(res.data)
       } catch (err) {
         console.log(err)
@@ -96,7 +96,7 @@ const handleDeleteRow = (id: number) => {
       if(objUpdate==undefined){
         await createCategory(data);
       }else{
-        await updateCategorys({categoryId:objUpdate.categoryId, name: data.name })
+        await updateCategory({categoryId:objUpdate.categoryId, name: data.name })
       }
         window.location.reload();
      
@@ -190,8 +190,6 @@ const handleDeleteRow = (id: number) => {
                                     onDeleteRow={() => handleDeleteRow(row.categoryId)}
                                 />
                                 ))}
-
-                            
                         </TableBody>
                     </Table>
                 </Scrollbar>
@@ -208,7 +206,6 @@ const handleDeleteRow = (id: number) => {
             />
             </Card>
           </Grid>
-         
       </Grid>
     </>
   )
