@@ -75,7 +75,7 @@ export default function AccountGeneral() {
       password: '12345678',
       address: '',
       status:0,
-      virtualWallet:50000
+      virtualWallet:500000
     };
 
     var user = useSelector((state)=>state.users.users.find((u)=> u.email === email));

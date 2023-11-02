@@ -14,8 +14,8 @@ axiosInstance.interceptors.response.use(
 );
 //Category
 export const createCategory  = (data:Category) => axiosInstance.post('/api/categories/add',data,config);
-export const getCategorys  = () => axiosInstance.get<FetchCategory[]>('/api/categories',config);
-export const updateCategorys = (data:FetchCategory) => axiosInstance.put('/api/categories/save/' + data.categoryId, data,config);
+export const getCategories  = () => axiosInstance.get<FetchCategory[]>('/api/categories',config);
+export const updateCategory = (data:FetchCategory) => axiosInstance.put('/api/categories/save/' + data.categoryId, data,config);
 
 //User
 export const listUsers = ()=> axiosInstance.get<User[]>('/api/users',config);

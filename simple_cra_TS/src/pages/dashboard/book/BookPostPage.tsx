@@ -29,8 +29,8 @@ export default function BookPostPage() {
                     href: PATH_DASHBOARD.root,
                     },
                     {
-                    name: 'Blog',
-                    href: PATH_DASHBOARD.blog.root,
+                    name: 'Book',
+                    href: PATH_DASHBOARD.book.list,
                     },
                     {
                     name: 'create book',
