@@ -64,6 +64,7 @@ export default function BookListPage() {
     const theme = useTheme();
     const navigate = useNavigate();
     const bookData = useSelector(state=> state.books.books);
+    console.log("bookData: ", bookData);
     const categoriesOption = useSelector(state=> state.categories.categories);
     const {
         dense,

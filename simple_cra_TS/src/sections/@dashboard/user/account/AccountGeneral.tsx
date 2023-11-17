@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import * as Yup from 'yup';
 import { useCallback } from 'react';
 import { useAuthContext } from 'src/auth/useAuthContext';
@@ -52,7 +52,7 @@ const status =[
 ]
   
 
-export default function AccountGeneral() {
+export default function AccountGeneral({disable} : {disable?: boolean}) {
     const {email} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -94,6 +94,16 @@ export default function AccountGeneral() {
         };
       }
     },[])
+
+
+    useEffect(() => {
+      async function fetchUser() {
+        const response = await fetch(`http://localhost:8080/api/user/${user?.id}`);
+        const data = await response.json();
+        console.log(data);
+      }
+      fetchUser();
+    }, [])
   
 
     const methods = useForm<FormValuesProps>({
@@ -122,9 +132,12 @@ export default function AccountGeneral() {
                 status: objStatus[data?.status],
                 virtualWallet:data.virtualWallet
               }))
+              alert("Update user thành công");
+              navigate("/dashboard/user/list");
+              // location.reload();
           }else{
-            dispatch(createUserThunk(data));  
-            navigate("/dashboard/user/list")
+            // dispatch(createUserThunk(data)); 
+            // navigate("/dashboard/user/list")
           }
         } catch (error) {
           console.error(error);
@@ -203,27 +216,30 @@ export default function AccountGeneral() {
                  sm: 'repeat(2, 1fr)',
                  }}
              >
-               <RHFTextField name="name" label="Name" />
-                 <RHFTextField name="username" label="Username" />
+               <RHFTextField name="name" label="Name" disabled={disable}/>
+                 <RHFTextField name="username" label="Username" disabled={disable}/>
   
-                 <RHFTextField name="email" label="Email Address" />
+                 <RHFTextField name="email" label="Email Address" disabled={disable}/>
   
-                 <RHFTextField name="address" label="Address" />
-                 <RHFSelect name="statusId" label="Status" value={getStatus} onChange={(e)=>handleSetValueStatus(parseInt(e.target.value))}>
+                 <RHFTextField name="address" label="Address" disabled={disable}/>
+                 <RHFSelect name="statusId" label="Status" disabled={disable} value={getStatus} onChange={(e)=>handleSetValueStatus(parseInt(e.target.value))}>
                     {status.map((s) => (
                             <option key={s.id} value={s.id}>
                             {s.name}
                             </option>
                     ))}
                     </RHFSelect>
-                 <RHFTextField  name="virtualWallet" disabled={true} label="Virtual Wallet" />
+                 <RHFTextField  name="virtualWallet" disabled label="Virtual Wallet" />
              </Box>
   
-             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+            {disable || 
+            ( <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+                 <LoadingButton type="submit" variant="contained" loading={isSubmitting} >
                  Save Changes
                  </LoadingButton>
              </Stack>
+            )}
+            
              </Card>
          </Grid>
          </Grid>

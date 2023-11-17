@@ -119,17 +119,35 @@ export default function ListUserPage() {
 
   const [filterStatus, setFilterStatus] = useState('all');
 
-  useCallback(() => {
+  // useCallback(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const res = await listUsers();
+
+  //       // console.log("res.data: ", res.data)
+  //       setTableData(res.data);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  //   fetchData();
+  // }, [tableData]);
+
+
+  ////edited
+  useEffect(() => {
     async function fetchData() {
       try {
         const res = await listUsers();
+
+        // console.log("res.data: ", res.data)
         setTableData(res.data);
       } catch (err) {
         console.log(err);
       }
     }
     fetchData();
-  }, [tableData]);
+  }, [])
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -201,8 +219,9 @@ export default function ListUserPage() {
     }
   };
 
-  const handleEditRow = (id: number) => {
-    //navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+  const handleEditRow = (email: string) => {
+    // navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    navigate(PATH_DASHBOARD.user.edit(email));
   };
 
   const handleViewRow = (email: string) => {
@@ -326,7 +345,7 @@ export default function ListUserPage() {
                         selected={selected.includes(row.email)}
                         onSelectRow={() => onSelectRow(row.email)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
+                        onEditRow={() => handleEditRow(row.email)}
                         onViewDetail={() => handleViewRow(row.email)}
                         onShowFormAddRole={() => handleShowFormAddRole(row.email)}
                         handleShowFormLoadMoney={() => handleShowFormLoadMoney(row)}

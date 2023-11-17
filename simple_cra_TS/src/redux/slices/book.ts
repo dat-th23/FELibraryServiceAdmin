@@ -4,7 +4,6 @@ import { CreateBook, FetchBooks } from "src/utils/types";
 
 export interface BooksState {
     books: FetchBooks[];
-   
 }
 
 
@@ -20,7 +19,7 @@ export const createBookThunk = createAsyncThunk(
     }
 )
 
-export const  fetchBookThunk =  createAsyncThunk(
+export const fetchBookThunk =  createAsyncThunk(
     'books/fetch',
     async () => {
         return listBooksAPI();
@@ -45,8 +44,8 @@ export const booksSlice =  createSlice({
                 
             })
             .addCase(fetchBookThunk.fulfilled,(state,action)=>{
-                state.books =action.payload.data;
-               
+                const data_tmp = action.payload.data as any
+                state.books = data_tmp.content;
             })
     },
 });

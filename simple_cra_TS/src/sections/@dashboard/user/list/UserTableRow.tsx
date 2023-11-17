@@ -149,7 +149,7 @@ export default function UserTableRow({
         </MenuItem>
         <Divider/>
 
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             handleOpenConfirm();
             handleClosePopover();
@@ -158,7 +158,7 @@ export default function UserTableRow({
         >
           <Iconify icon="eva:trash-2-outline" />
           Delete
-        </MenuItem>
+        </MenuItem> */}
 
        
       </MenuPopover>

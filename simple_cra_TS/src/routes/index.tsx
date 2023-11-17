@@ -33,6 +33,7 @@ import {
   OrderGetAllPage,
   OrderNewPage,
   OrderDetailPage,
+  EditPage,
 } from './elements';
 import BlogPostPage from 'src/pages/dashboard/BlogPostPage';
 import ViewDetailBookPage from 'src/pages/dashboard/book/ViewDetailBookPage';
@@ -90,6 +91,7 @@ export default function Router() {
             { path: 'list', element: <ListAllUserPage /> },
             { path: 'new', element: <NewAccount /> },
             { path: ':email/account', element: <AccountPage /> },
+            { path: ':email/edit', element: <EditPage /> },
             { path: 'five', element: <PageFive /> },
             { path: 'six', element: <PageSix /> },
           ],

@@ -18,7 +18,7 @@ import { OrderBook } from 'src/utils/types';
 // _mock_
 import { _userPayment, _userAddressBook, _userInvoices, _userAbout } from '../../_mock/arrays';
 
-export default function AccountPage() {
+export default function EditPage() {
   const  {email} = useParams();
   const { themeStretch } = useSettingsContext();
   const [showFormConfirm,setShowFormConfirm] = useState(false);
@@ -41,7 +41,7 @@ export default function AccountPage() {
       value: 'general',
       label: 'General',
       icon: <Iconify icon="ic:round-account-box" />,
-      component:  <AccountGeneral disable/>,
+      component:  <AccountGeneral disable={false}/>,
     },
     {
       value: 'billing',

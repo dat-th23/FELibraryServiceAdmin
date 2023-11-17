@@ -25,6 +25,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/user'),
     newAccount : path(ROOTS_DASHBOARD, '/user/new'),
     account: (email: string) => path(ROOTS_DASHBOARD, `/user/${email}/account`),
+    edit: (email: string) => path(ROOTS_DASHBOARD, `/user/${email}/edit`),
     four: path(ROOTS_DASHBOARD, '/user/four'),
     five: path(ROOTS_DASHBOARD, '/user/five'),
     six: path(ROOTS_DASHBOARD, '/user/six'),

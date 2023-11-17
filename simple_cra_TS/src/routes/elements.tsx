@@ -54,4 +54,5 @@ export const OrderDetailPage =  Loadable(lazy(() => import('../pages/order/Order
 //Users
 export const ListAllUserPage = Loadable(lazy(() => import('../pages/user/ListUserPage')));
 export const AccountPage = Loadable(lazy(() => import('../pages/user/AccountPage')));
+export const EditPage = Loadable(lazy(() => import('../pages/user/EditPage')));
 export const NewAccount = Loadable(lazy(() => import('../pages/user/NewAccount')));

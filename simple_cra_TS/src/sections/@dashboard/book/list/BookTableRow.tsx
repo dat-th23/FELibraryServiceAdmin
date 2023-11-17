@@ -45,6 +45,7 @@ export default function BookTableRow({
   onDeleteRow,
 }: Props) {
   const { id, title, createdAt, author, status,price } = row;
+  console.log("id ", id)
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -148,6 +149,7 @@ export default function BookTableRow({
           onClick={() => {
             handleOpenConfirm();
             handleClosePopover();
+            fetch(`http://localhost:8080/api/books/delete/${id}`)
           }}
           sx={{ color: 'error.main' }}
         >
