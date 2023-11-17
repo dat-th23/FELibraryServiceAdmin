@@ -47,9 +47,10 @@ import {
 import { InvoiceTableRow, InvoiceTableToolbar } from '../../sections/@dashboard/invoice/list';
 import { dispatch, useDispatch, useSelector } from 'src/redux/store';
 import { fetchBookThunk } from 'src/redux/slices/book';
-import { FetchBooks } from 'src/utils/types';
+import { FetchBooks, FetchOrderItem } from 'src/utils/types';
 import { BookTableToolbar } from 'src/sections/@dashboard/book/list';
 import BookTableRow from 'src/sections/@dashboard/book/list/BookTableRow';
+import axios, { AxiosRequestConfig } from 'axios';
   const TABLE_HEAD = [
     { id: 'invoiceNumber', label: 'Client', align: 'left' },
     { id: 'title', label: 'Title', align: 'left' },
@@ -149,16 +150,29 @@ export default function BookListPage() {
     
     const isFiltered = filterTitle !== '' 
 
-    const handleDeleteRow = (id: string) => {
+    const handleDeleteRow = async (id: string) => {
         const deleteRow = tableData.filter((row) => row.id !== id);
         setSelected([]);
         setTableData(deleteRow);
+
+        ///// xoa sach
+      const axiosInstance = axios.create({ baseURL: 'http://localhost:8080' });
+      const accessToken = localStorage.getItem('accessToken');
+      const config: AxiosRequestConfig = { withCredentials: true,headers: {Authorization: 'Bearer ' + accessToken}}
+      axiosInstance.delete<FetchOrderItem[]>('/api/books/delete/' + id ,config);
+      ////////
+
+
+        console.log("XOA USER CHO TAO")
+
         if (page > 0) {
           if (dataInPage.length < 2) {
             setPage(page - 1);
           }
         }
+
       };
+
       const handleFilterTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPage(0);
         setFilterTitle(event.target.value);

@@ -49,10 +49,11 @@ export const usersSlice =  createSlice({
                 state.users =action.payload.data;
             })
             .addCase(createUserThunk.fulfilled,(state,action)=>{
+                alert("Create user thành công");
                 state.users.push(action.payload.data);
             })
             .addCase(updateUserThunk.fulfilled, (state,action)=>{
-
+                alert("Update user thành công");
             })
     },
 });

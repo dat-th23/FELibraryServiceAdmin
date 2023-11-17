@@ -54,6 +54,8 @@ const status =[
 
 export default function AccountGeneral({disable} : {disable?: boolean}) {
     const {email} = useParams();
+console.log(":email: ", email)
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loadingUpload,setLoadingUpload] = useState(false);
@@ -132,12 +134,37 @@ export default function AccountGeneral({disable} : {disable?: boolean}) {
                 status: objStatus[data?.status],
                 virtualWallet:data.virtualWallet
               }))
-              alert("Update user thành công");
               navigate("/dashboard/user/list");
               // location.reload();
           }else{
             // dispatch(createUserThunk(data)); 
             // navigate("/dashboard/user/list")
+          }
+
+          // "id": 1,
+          // "name": "Nguyễn Thành Đạt",
+          // "username": "admin",
+          // "password": "$2a$10$hHSJaaySwPBD/5Y4IQRgfuCQwfq/VRPpVVOLUms3Ja0OW7xkz9J7e",
+          // "phoneNumber": null,
+          // "email": "Nguyễn Thành Đạt",
+          // "avatar": "1.png",
+          // "address": "Hà Nội",
+          // "status": "ACTIVE",
+          // "virtualWallet": 500200,
+          // "roles": 
+
+          if (!email) {
+            dispatch(createUserThunk({
+              name:  data.name,
+              email:  data.email,
+              username:  data.username,
+              password: data.password,
+              avatar: data.avatar,
+              address: data.address,
+              status: objStatus[data?.status],
+              virtualWallet:data.virtualWallet
+            }))
+            navigate("/dashboard/user/list");
           }
         } catch (error) {
           console.error(error);
@@ -220,6 +247,8 @@ export default function AccountGeneral({disable} : {disable?: boolean}) {
                  <RHFTextField name="username" label="Username" disabled={disable}/>
   
                  <RHFTextField name="email" label="Email Address" disabled={disable}/>
+
+                 {email ? true : <RHFTextField name="password" label="Password" disabled={disable}/> }
   
                  <RHFTextField name="address" label="Address" disabled={disable}/>
                  <RHFSelect name="statusId" label="Status" disabled={disable} value={getStatus} onChange={(e)=>handleSetValueStatus(parseInt(e.target.value))}>

@@ -149,7 +149,6 @@ export default function BookTableRow({
           onClick={() => {
             handleOpenConfirm();
             handleClosePopover();
-            fetch(`http://localhost:8080/api/books/delete/${id}`)
           }}
           sx={{ color: 'error.main' }}
         >
