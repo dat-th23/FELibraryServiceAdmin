@@ -68,6 +68,7 @@ export default function DetailOrderForm({ isEdit, currentOrder }: Props) {
   } = methods;
 
   useEffect(() => {
+    console.log(_orderItem)
     if (isEdit && currentOrder) {
       reset(defaultValues);
     }

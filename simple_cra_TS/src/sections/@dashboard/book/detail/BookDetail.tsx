@@ -54,7 +54,7 @@ export default function BookDetail() {
             <Typography variant="body2">Title: {bookDetail?.title}</Typography>
             <Typography variant="body2">Price: {bookDetail?.borrowPrice}VND</Typography>
             <Typography variant="body2">Borrow Price: {bookDetail?.price}VND</Typography>
-
+            <Typography variant="body2">Quantity: {bookDetail?.amount}</Typography>
             <Typography variant="body2">Author : {bookDetail?.author}</Typography>
             <Typography variant="body2">Detail : {bookDetail?.detail}</Typography>
             <Typography variant="body2">Publisher : {bookDetail?.publisher}</Typography>

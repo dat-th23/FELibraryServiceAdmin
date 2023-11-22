@@ -36,7 +36,7 @@ const TABLE_HEAD = [
   { id: 'returnedAt', label: 'Returned At', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
 ];
-export default function OrderListItem({_orderItem,_order}: Props) {
+export default function OrderListItem({ _orderItem, _order }: Props) {
   const {
     dense,
     page,
@@ -57,81 +57,90 @@ export default function OrderListItem({_orderItem,_order}: Props) {
   } = useTable();
 
   const denseHeight = dense ? 56 : 76;
+  const [orderItem, setOrderItem] = useState(_orderItem);
 
-  
-    return (
-      <>
-        <Box sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ color: 'text.disabled', mb: 3 }}>
-            Details:
-          </Typography>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Scrollbar>
-                <Table sx={{ minWidth: 960 }}>
-                        <TableHeadCustom
-                            order={order}
-                            orderBy={orderBy}
-                            headLabel={TABLE_HEAD}
-                            rowCount={_orderItem.length}
-                            numSelected={selected.length}
-                            onSort={onSort}
-                            onSelectAllRows={(checked) =>
-                                onSelectAllRows(
-                                    checked,
-                                    _orderItem.map((row) => row.orderItemId+"")
-                                )
-                            }
-                         />
-                        <TableBody>
-                            {_orderItem
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row) => (
-                                <ListOrderItem
-                                    key={row.order.orderId}
-                                    row={row}
-                                    selected={selected.includes(row.orderItemId+"")}
-                                    onSelectRow={() => onSelectRow(row.orderItemId+"")}
-                                />
-                                ))}
+  const handleUpdateStatus = (id: number) => {
+    console.log(id)
+    const updatedOrderItem = orderItem.filter(item => {
+      return item.orderItemId !== id
+    })
+    setOrderItem(updatedOrderItem);
+  }
 
-                            <TableEmptyRows
-                                height={denseHeight}
-                                emptyRows={emptyRows(page, rowsPerPage, _orderItem.length)}
-                            />
+  return (
+    <>
+      <Box sx={{ p: 3 }}>
+        <Typography variant="h6" sx={{ color: 'text.disabled', mb: 3 }}>
+          Details:
+        </Typography>
+        <TableContainer sx={{ overflow: 'unset' }}>
+          <Scrollbar>
+            <Table sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                rowCount={_orderItem.length}
+                numSelected={selected.length}
+                onSort={onSort}
+                onSelectAllRows={(checked) =>
+                  onSelectAllRows(
+                    checked,
+                    _orderItem.map((row) => row.orderItemId + "")
+                  )
+                }
+              />
+              <TableBody>
+                {orderItem
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <ListOrderItem
+                      key={row.order.orderId}
+                      row={row}
+                      selected={selected.includes(row.orderItemId + "")}
+                      onSelectRow={() => onSelectRow(row.orderItemId + "")}
+                      onUpdateStatus={() => handleUpdateStatus(row.orderItemId)}
+                    />
+                  ))}
 
-                            {/* <TableNoData isNotFound={isNotFound} /> */}
-                        </TableBody>
-                </Table>
-            </Scrollbar>
+                <TableEmptyRows
+                  height={denseHeight}
+                  emptyRows={emptyRows(page, rowsPerPage, _orderItem.length)}
+                />
+
+                {/* <TableNoData isNotFound={isNotFound} /> */}
+              </TableBody>
+            </Table>
+          </Scrollbar>
         </TableContainer>
-          <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
-    
-          <Stack spacing={2} sx={{ mt: 3 }}>
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography>TotalRent :</Typography>
-              <Typography
-                sx={{ textAlign: 'right', width: 120 }}
-              >
-                {fCurrency(_order.totalRent)}
-              </Typography>
-            </Stack>
-    
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography>TotalDeposit :</Typography>
-              <Typography sx={{ textAlign: 'right', width: 120 }}>
-                {fCurrency(_order.totalDeposit)}
-              </Typography>
-            </Stack>
-    
-            <Stack direction="row" justifyContent="flex-end">
-              <Typography variant="h6">Total price :</Typography>
-              <Typography variant="h6" sx={{ textAlign: 'right', width: 120 }}>
-              {fCurrency(_order.totalDeposit +_order.totalRent)} 
-              </Typography>
-            </Stack>
+        <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
+
+        <Stack spacing={2} sx={{ mt: 3 }}>
+          <Stack direction="row" justifyContent="flex-end">
+            <Typography>TotalRent :</Typography>
+            <Typography
+              sx={{ textAlign: 'right', width: 120 }}
+            >
+              {fCurrency(_order.totalRent)}
+            </Typography>
           </Stack>
-        </Box>
-       
-      </>
-    );
+
+          <Stack direction="row" justifyContent="flex-end">
+            <Typography>TotalDeposit :</Typography>
+            <Typography sx={{ textAlign: 'right', width: 120 }}>
+              {fCurrency(_order.totalDeposit)}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" justifyContent="flex-end">
+            <Typography variant="h6">Total price :</Typography>
+            <Typography variant="h6" sx={{ textAlign: 'right', width: 120 }}>
+              {fCurrency(_order.totalDeposit + _order.totalRent)}
+            </Typography>
+          </Stack>
+        </Stack>
+      </Box>
+
+    </>
+  );
 }

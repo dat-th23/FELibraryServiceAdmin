@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import sumBy from 'lodash/sumBy';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
@@ -33,6 +33,7 @@ import { OrderTableRow, OrderTableToolbar } from 'src/sections/@dashboard/order/
 import { useSelector } from 'src/redux/store';
 import { OrderBook } from 'src/utils/types';
 import OrderAnalytic from 'src/sections/@dashboard/order/OrderAnalytic';
+import UpdateStatusDialog from 'src/components/dialog/UpdateStatusDialog';
 
 // ----------------------------------------------------------------------
 
@@ -54,11 +55,11 @@ const TABLE_HEAD = [
   { id: '' },
 ];
 
-export default  function GetAllOrder() {
+export default function GetAllOrder() {
   const theme = useTheme();
 
   const { themeStretch } = useSettingsContext();
-  const _dataOrder = useSelector((state)=>state.orderBook.orderBooks);
+  const _dataOrder = useSelector((state) => state.orderBook.orderBooks);
   const navigate = useNavigate();
 
   const {
@@ -94,7 +95,13 @@ export default  function GetAllOrder() {
 
   const [filterStartDate, setFilterStartDate] = useState<Date | null>(null);
 
-  const dataFiltered = applyFilter({
+  const [open, setOpen] = useState(false);
+
+  const [orderStatus, setOrderStatus] = useState<string>('');
+  const [orderStatusId, setOrderStatusId] = useState<string>('');
+  const [render,setRender] = useState(false);
+
+  let dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
@@ -103,6 +110,19 @@ export default  function GetAllOrder() {
     filterStartDate,
     filterEndDate,
   });
+
+
+  const handleUpdateStatus = (value: string, id: string) => {
+    
+  }
+
+
+
+  // const [dataFiltered, setRenderData] = useState(dataFiltered);
+
+  useEffect(() => {
+
+  }, [])
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -176,9 +196,25 @@ export default  function GetAllOrder() {
     }
   };
 
-  
+  let status = '';
+
+  const handleShowFormAddRole = (id: string) => {
+    console.log(id)
+    setOrderStatusId(id);
+    console.log(orderStatusId)
+    setOpen(true);
+  };
+
+  const handleCloseFormAddRole = () => {
+    setOpen(false);
+  };
+
   const handleViewRow = (id: string) => {
-   navigate(PATH_DASHBOARD.order.view(id));
+    navigate(PATH_DASHBOARD.order.view(id), { state: { action: "view" } });
+  };
+
+  const handleEditRow = (id: string) => {
+    navigate(PATH_DASHBOARD.order.edit(id), { state: { action: "edit" } });
   };
 
   const handleResetFilter = () => {
@@ -188,6 +224,7 @@ export default  function GetAllOrder() {
     setFilterEndDate(null);
     setFilterStartDate(null);
   };
+
 
   return (
     <>
@@ -225,98 +262,98 @@ export default  function GetAllOrder() {
 
         <Card sx={{ mb: 5 }}>
           <Scrollbar>
-              <Stack
-                direction="row"
-                divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
-                sx={{ py: 2 }}
-              >
-                <OrderAnalytic
-                  title="Total"
-                  total={tableData.length}
-                  percent={100}
-                  price={sumBy(tableData, 'totalPrice')}
-                  icon="ic:round-receipt"
-                  color={theme.palette.info.main}
-                />
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              sx={{ py: 2 }}
+            >
+              <OrderAnalytic
+                title="Total"
+                total={tableData.length}
+                percent={100}
+                price={sumBy(tableData, 'totalPrice')}
+                icon="ic:round-receipt"
+                color={theme.palette.info.main}
+              />
 
-                <OrderAnalytic
-                  title="Pending"
-                  total={getLengthByStatus('PENDING')}
-                  percent={getPercentByStatus('PENDING')}
-                  price={getTotalPriceByStatus('PENDING')}
-                  icon="eva:checkmark-circle-2-fill"
-                  color={theme.palette.success.main}
-                />
+              <OrderAnalytic
+                title="Pending"
+                total={getLengthByStatus('PENDING')}
+                percent={getPercentByStatus('PENDING')}
+                price={getTotalPriceByStatus('PENDING')}
+                icon="eva:checkmark-circle-2-fill"
+                color={theme.palette.success.main}
+              />
 
-                <OrderAnalytic
-                  title="Available"
-                  total={getLengthByStatus('AVAILABLE')}
-                  percent={getPercentByStatus('AVAILABLE')}
-                  price={getTotalPriceByStatus('AVAILABLE')}
-                  icon="eva:clock-fill"
-                  color={theme.palette.warning.main}
-                />
+              <OrderAnalytic
+                title="Available"
+                total={getLengthByStatus('AVAILABLE')}
+                percent={getPercentByStatus('AVAILABLE')}
+                price={getTotalPriceByStatus('AVAILABLE')}
+                icon="eva:clock-fill"
+                color={theme.palette.warning.main}
+              />
 
-                <OrderAnalytic
-                  title="Processing"
-                  total={getLengthByStatus('PROCESSING')}
-                  percent={getPercentByStatus('PROCESSING')}
-                  price={getTotalPriceByStatus('PROCESSING')}
-                  icon="eva:bell-fill"
-                  color={theme.palette.error.main}
-                />
+              <OrderAnalytic
+                title="Processing"
+                total={getLengthByStatus('PROCESSING')}
+                percent={getPercentByStatus('PROCESSING')}
+                price={getTotalPriceByStatus('PROCESSING')}
+                icon="eva:bell-fill"
+                color={theme.palette.error.main}
+              />
 
-                <OrderAnalytic
-                  title="Completed"
-                  total={getLengthByStatus('COMPLETED')}
-                  percent={getPercentByStatus('COMPLETED')}
-                  price={getTotalPriceByStatus('COMPLETED')}
-                  icon="eva:file-fill"
-                  color={theme.palette.text.secondary}
-                />
-              </Stack>
+              <OrderAnalytic
+                title="Completed"
+                total={getLengthByStatus('COMPLETED')}
+                percent={getPercentByStatus('COMPLETED')}
+                price={getTotalPriceByStatus('COMPLETED')}
+                icon="eva:file-fill"
+                color={theme.palette.text.secondary}
+              />
+            </Stack>
           </Scrollbar>
         </Card>
         <Card>
           <Tabs
-              value={filterStatus}
-              onChange={handleFilterStatus}
-              sx={{
-                px: 2,
-                bgcolor: 'background.neutral',
-              }}
-            >
-              {TABS.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  value={tab.value}
-                  label={tab.label}
-                  icon={
-                    <Label color={tab.color} sx={{ mr: 1 }}>
-                      {tab.count}
-                    </Label>
-                  }
-                />
-              ))}
-            </Tabs>
-            <Divider />
-              <OrderTableToolbar
-                isFiltered={isFiltered}
-                filterName={filterName}
-                filterService={filterService}
-                filterEndDate={filterEndDate}
-                onFilterName={handleFilterName}
-                optionsService={SERVICE_OPTIONS}
-                onResetFilter={handleResetFilter}
-                filterStartDate={filterStartDate}
-                onFilterService={handleFilterService}
-                onFilterStartDate={(newValue) => {
-                  setFilterStartDate(newValue);
-                }}
-                onFilterEndDate={(newValue) => {
-                  setFilterEndDate(newValue);
-                }}
+            value={filterStatus}
+            onChange={handleFilterStatus}
+            sx={{
+              px: 2,
+              bgcolor: 'background.neutral',
+            }}
+          >
+            {TABS.map((tab) => (
+              <Tab
+                key={tab.value}
+                value={tab.value}
+                label={tab.label}
+                icon={
+                  <Label color={tab.color} sx={{ mr: 1 }}>
+                    {tab.count}
+                  </Label>
+                }
               />
+            ))}
+          </Tabs>
+          <Divider />
+          <OrderTableToolbar
+            isFiltered={isFiltered}
+            filterName={filterName}
+            filterService={filterService}
+            filterEndDate={filterEndDate}
+            onFilterName={handleFilterName}
+            optionsService={SERVICE_OPTIONS}
+            onResetFilter={handleResetFilter}
+            filterStartDate={filterStartDate}
+            onFilterService={handleFilterService}
+            onFilterStartDate={(newValue) => {
+              setFilterStartDate(newValue);
+            }}
+            onFilterEndDate={(newValue) => {
+              setFilterEndDate(newValue);
+            }}
+          />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
@@ -385,6 +422,8 @@ export default  function GetAllOrder() {
                         selected={selected.includes(row.orderId)}
                         onSelectRow={() => onSelectRow(row.orderId)}
                         onViewRow={() => handleViewRow(row.orderId)}
+                        onEditRow={() => handleEditRow(row.orderId)}
+                        onUpdateStatus={() => handleShowFormAddRole(row.orderId)}
                       />
                     ))}
 
@@ -410,6 +449,15 @@ export default  function GetAllOrder() {
           />
         </Card>
       </Container>
+
+
+      <UpdateStatusDialog
+        open={open}
+        onClose={handleCloseFormAddRole}
+        onSaveRole={handleCloseFormAddRole}
+        onUpdate={handleUpdateStatus}
+        orderId={orderStatusId}
+      />
     </>
   )
 }

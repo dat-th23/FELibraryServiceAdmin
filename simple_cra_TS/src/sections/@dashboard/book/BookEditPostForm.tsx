@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import {createBookThunk, fetchBookThunk} from 'src/redux/slices/book';
 import { getBookById, putBook } from 'src/utils/axios';
 import { FetchBooks, FetchCategory } from 'src/utils/types';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 
 
 // ----------------------------------------------------------------------
@@ -96,8 +97,7 @@ export default function BookEditPostForm() {
    
    
 
-    const categories =  useSelector(state =>state.categories.categories);
-  
+    const categories =  useSelector(state =>state.categories.categories); 
     const [openPreview, setOpenPreview] = useState(false);
   
     const handleOpenPreview = () => {
@@ -109,6 +109,7 @@ export default function BookEditPostForm() {
 
         const res = await putBook(data);
         console.log(res);
+        navigate(PATH_DASHBOARD.book.list);
         
       } catch (error) {
         console.error(error);
@@ -225,16 +226,7 @@ export default function BookEditPostForm() {
               </Card>
     
               <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
-                <Button
-                  fullWidth
-                  color="inherit"
-                  variant="outlined"
-                  size="large"
-                  onClick={handleOpenPreview}
-                >
-                  Preview
-                </Button>
-    
+            
                 <LoadingButton
                   fullWidth
                   type="submit"

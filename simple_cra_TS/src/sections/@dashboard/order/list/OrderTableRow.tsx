@@ -33,6 +33,8 @@ type Props = {
   selected: boolean;
   onSelectRow: VoidFunction;
   onViewRow: VoidFunction;
+  onEditRow: VoidFunction;
+  onUpdateStatus: VoidFunction; 
 };
 
 export default function OrderTableRow({
@@ -40,8 +42,10 @@ export default function OrderTableRow({
   selected,
   onSelectRow,
   onViewRow,
+  onEditRow,
+  onUpdateStatus
 }: Props) {
-  const {  phoneNumber, createdAt, updatedAt, status, user, totalDeposit,totalRent } = row;
+  const { phoneNumber, createdAt, updatedAt, status, user, totalDeposit, totalRent } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -56,6 +60,12 @@ export default function OrderTableRow({
   };
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
+    console.log(event.currentTarget.innerText)
+    setOpenPopover(event.currentTarget);
+  };
+
+  const selectValue = (event: React.MouseEvent<HTMLElement>) => {
+    // console.log(event.currentTarget.innerText)
     setOpenPopover(event.currentTarget);
   };
 
@@ -114,19 +124,33 @@ export default function OrderTableRow({
 
       <MenuPopover
         open={openPopover}
+
         onClose={handleClosePopover}
         arrow="right-top"
         sx={{ width: 160 }}
       >
         <MenuItem
-          onClick={() => {
-            onViewRow();
+          onClick={(e) => {
+            selectValue(e)
+            // onViewRow();
             handleClosePopover();
           }}
         >
           <Iconify icon="eva:eye-fill" />
           View
         </MenuItem>
+        <MenuItem
+          onClick={(e) => {
+            selectValue(e)
+            // onEditRow();
+            onUpdateStatus();
+            handleClosePopover();
+          }}
+        >
+          <Iconify icon="eva:eye-fill" />
+          Edit
+        </MenuItem>
+
       </MenuPopover>
     </>
   );
