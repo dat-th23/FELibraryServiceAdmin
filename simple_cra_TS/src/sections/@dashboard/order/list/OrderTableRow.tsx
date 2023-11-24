@@ -132,7 +132,7 @@ export default function OrderTableRow({
         <MenuItem
           onClick={(e) => {
             selectValue(e)
-            // onViewRow();
+            onViewRow();
             handleClosePopover();
           }}
         >
